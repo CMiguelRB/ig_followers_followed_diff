@@ -16,7 +16,6 @@ const cookie =  process.env.COOKIE;
 const csrfToken = process.env.CSRFTOKEN;
 const igAppId = process.env.IGAPPID;
 const userId = process.env.USERID;
-
 const account = process.env.ACCOUNT;
 
 
@@ -41,16 +40,16 @@ const get_info = () => {
             resolve(true);
         }).catch(e =>{
             reject(false);
-        }) 
-    })
+        });
+    });
 }
 
 const get_followers = (max_id) => {
     return new Promise((resolve, reject) => {
-        axios.get(`https://www.instagram.com/api/v1/friendships/${userId}/followers/?count=200${max_id}`,
+        axios.get(`https://www.instagram.com/api/v1/friendships/${userId}/followers/?count=200&max_id=${max_id}`,
           config
         ).then(data => {             
-            next_max_id = '&max_id='+data.data['next_max_id'];
+            next_max_id = data.data['next_max_id'];
             for(let i in data.data['users']){
                 followers_list.push(data.data['users'][i]['username']);
             }
@@ -58,16 +57,16 @@ const get_followers = (max_id) => {
             resolve(true);
         }).catch(e =>{
             reject(false);
-        }) 
-    })
+        });
+    });
 }
 
 const get_followed = (max_id) => {
     return new Promise((resolve, reject) => { 
-        axios.get(`https://www.instagram.com/api/v1/friendships/${userId}/following/?count=200${max_id}`,
+        axios.get(`https://www.instagram.com/api/v1/friendships/${userId}/following/?count=200&max_id=${max_id}`,
           config
         ).then(data => {             
-            next_max_id = '&max_id='+data.data['next_max_id'];
+            next_max_id = data.data['next_max_id'];
             for(let i in data.data['users']){
                 followed_list.push(data.data['users'][i]['username']);
             }
@@ -75,8 +74,8 @@ const get_followed = (max_id) => {
             resolve(true);
         }).catch(e =>{
             reject(false);
-        }) 
-    })
+        });
+    });
 }
 
 const loop_followers = async () => {
