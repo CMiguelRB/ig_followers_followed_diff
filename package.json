@@ -1,0 +1,11 @@
+{
+  "name": "ig_followers_followed_diff",
+  "description": "",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.2.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {}
+}
