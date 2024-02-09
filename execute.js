@@ -46,16 +46,19 @@ const get_info = () => {
 
 const get_followers = (max_id) => {
     return new Promise((resolve, reject) => {
-        axios.get(`https://www.instagram.com/api/v1/friendships/${userId}/followers/?count=200&max_id=${max_id}`,
+        axios.get(`https://www.instagram.com/api/v1/friendships/${userId}/followers/?count=180&max_id=${max_id}`,
           config
-        ).then(data => {             
-            next_max_id = data.data['next_max_id'];
+        ).then(data => {    
+            if(data.data['next_max_id']){
+                next_max_id = data.data['next_max_id'];
+            }
             for(let i in data.data['users']){
                 followers_list.push(data.data['users'][i]['username']);
             }
             count_followers -= data.data['users'].length;
             resolve(true);
         }).catch(e =>{
+            console.log(e);
             reject(false);
         });
     });
@@ -73,6 +76,7 @@ const get_followed = (max_id) => {
             count_followed -= data.data['users'].length;
             resolve(true);
         }).catch(e =>{
+            console.log(e);
             reject(false);
         });
     });
@@ -83,7 +87,7 @@ const loop_followers = async () => {
         let result = await get_followers(next_max_id);
         process.stdout.clearLine(0);
         process.stdout.cursorTo(0);
-        process.stdout.write(`Processing followers: ${count_followers} remaining.`);
+        process.stdout.write(`processing followers: ${count_followers} remaining.`);
         if(!result) break;
         await new Promise(r => setTimeout(r, Math.floor(Math.random() * 3000) + 2000));
     }
@@ -95,7 +99,7 @@ const loop_followed = async () => {
         let result = await get_followed(next_max_id);
         process.stdout.clearLine(0);
         process.stdout.cursorTo(0);
-        process.stdout.write(`Processing followed: ${count_followed} remaining.`);
+        process.stdout.write(`processing followed: ${count_followed} remaining.`);
         if(!result) break;
         await new Promise(r => setTimeout(r, Math.floor(Math.random() * 3000) + 2000));
     }
@@ -116,7 +120,7 @@ const diff_followers_followed = async () => {
         return console.log(e);
     }
     console.log('');
-    console.log('Running diff process...');
+    console.log('Running diff //process...');
     const unfollow = [];
     for(let i in followed_list){
         if(followers_list.indexOf(followed_list[i]) == -1){
